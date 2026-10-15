@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Fai la tua domanda · Politicamente Giovani</title>
+<meta name="theme-color" content="#071820">
+<link rel="icon" href="/logo.png">
+<style>
+  :root{
+    --bg:#071820; --bg2:#0b2430; --card:#0e2a38; --line:#1d4556;
+    --accent:#14a8bd; --accent-dark:#0a2a3a; --text:#f3f7f8; --muted:#8fb0bb;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%}
+  body{
+    background:radial-gradient(900px 500px at 50% -80px,#0f3a4b 0%,var(--bg) 60%);
+    background-color:var(--bg);
+    color:var(--text);
+    font-family:Inter,"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    min-height:100vh;min-height:100dvh;
+    display:flex;flex-direction:column;align-items:center;
+    padding:clamp(28px,7vh,64px) 20px calc(24px + env(safe-area-inset-bottom));
+  }
+  main{width:100%;max-width:520px;text-align:center;flex:1}
+  .logo{
+    width:112px;height:112px;border-radius:50%;display:block;margin:0 auto 26px;
+    box-shadow:0 0 50px rgba(20,168,189,.28);
+  }
+  h1{font-size:clamp(30px,8vw,40px);line-height:1.1;margin:0 0 12px;font-weight:800;letter-spacing:-.02em}
+  .sub{margin:0 auto;color:var(--muted);font-size:clamp(16px,4.2vw,19px);line-height:1.4;max-width:420px}
+  .dots{display:flex;justify-content:center;gap:16px;margin:30px 0 32px}
+  .dots i{width:9px;height:9px;border-radius:50%;background:var(--accent);opacity:.3}
+  .dots i:nth-child(n+4):nth-child(-n+6){opacity:.85;box-shadow:0 0 10px var(--accent)}
+  form{text-align:left}
+  textarea{
+    width:100%;min-height:150px;resize:none;display:block;
+    background:var(--bg2);color:var(--text);
+    border:1.5px solid var(--line);border-radius:22px;
+    padding:20px 22px;font:inherit;font-size:19px;line-height:1.45;
+    transition:border-color .15s, box-shadow .15s;
+  }
+  textarea::placeholder{color:#6d8d99}
+  textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px rgba(20,168,189,.18)}
+  .count{text-align:right;color:var(--muted);font-size:13px;margin:8px 6px 0;min-height:18px}
+  button{
+    width:100%;margin-top:14px;border:0;border-radius:20px;cursor:pointer;
+    background:var(--accent);color:var(--accent-dark);
+    font:inherit;font-weight:700;font-size:20px;padding:22px 20px;
+    transition:transform .08s, filter .15s, opacity .15s;
+  }
+  button:hover{filter:brightness(1.08)}
+  button:active{transform:scale(.985)}
+  button:disabled{opacity:.5;cursor:default}
+  button.secondary{background:transparent;color:var(--text);border:1.5px solid var(--line)}
+  .msg{margin:14px 4px 0;font-size:15px;color:#ffb4a6;min-height:20px;text-align:center}
+  .thanks,.closed{display:none;padding:24px 8px}
+  .thanks .check{
+    width:72px;height:72px;border-radius:50%;margin:0 auto 20px;
+    background:rgba(20,168,189,.15);border:2px solid var(--accent);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .thanks h2,.closed h2{font-size:26px;margin:0 0 8px}
+  .thanks p,.closed p{color:var(--muted);margin:0 0 8px;font-size:17px;line-height:1.4}
+  footer{margin-top:40px}
+  footer a{color:var(--muted);font-size:15px;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+  footer a:hover{color:var(--text)}
+  .show{display:block}
+  .hide{display:none}
+</style>
+</head>
+<body>
+<main>
+  <img class="logo" src="/logo.png" alt="Politicamente Giovani">
+  <h1>Fai la tua domanda</h1>
+  <p class="sub">Proporremo alcune delle vostre domande durante l'incontro</p>
+  <div class="dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+  <form id="form" novalidate>
+    <textarea id="testo" maxlength="400" placeholder="Scrivi qui la tua domanda..." aria-label="La tua domanda" autocomplete="off"></textarea>
+    <div class="count" id="count"></div>
+    <button type="submit" id="invia">Invia la domanda</button>
+    <div class="msg" id="msg" role="status"></div>
+  </form>
+
+  <section class="thanks" id="thanks">
+    <div class="check" aria-hidden="true">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#14a8bd" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+    </div>
+    <h2>Domanda inviata!</h2>
+    <p>Grazie, la regia la riceverà subito.</p>
+    <button type="button" class="secondary" id="ancora">Fai un'altra domanda</button>
+  </section>
+
+  <section class="closed" id="closed">
+    <h2>Domande chiuse</h2>
+    <p>In questo momento non stiamo ricevendo nuove domande.</p>
+  </section>
+</main>
+
+<footer>
+  <a href="/privacy">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>
+    Privacy Policy
+  </a>
+</footer>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const form = $("form"), testo = $("testo"), invia = $("invia"), msg = $("msg");
+
+function mostra(vista){
+  form.classList.toggle("hide", vista !== "form");
+  $("thanks").classList.toggle("show", vista === "thanks");
+  $("closed").classList.toggle("show", vista === "closed");
+}
+
+testo.addEventListener("input", () => {
+  const n = testo.value.length;
+  $("count").textContent = n > 300 ? n + " / 400" : "";
+  msg.textContent = "";
+});
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const valore = testo.value.trim();
+  if (valore.length < 3) { msg.textContent = "Scrivi prima la tua domanda."; testo.focus(); return; }
+  invia.disabled = true; invia.textContent = "Invio in corso...";
+  try {
+    const r = await fetch("/api/domande", {
+      method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ testo: valore })
+    });
+    if (r.ok) { testo.value = ""; $("count").textContent = ""; mostra("thanks"); }
+    else if (r.status === 403) mostra("closed");
+    else if (r.status === 429) msg.textContent = "Stai inviando troppo in fretta, riprova tra un minuto.";
+    else msg.textContent = "Non è stato possibile inviare la domanda. Riprova.";
+  } catch (_) {
+    msg.textContent = "Connessione assente. Controlla la rete e riprova.";
+  }
+  invia.disabled = false; invia.textContent = "Invia la domanda";
+});
+
+$("ancora").addEventListener("click", () => { mostra("form"); testo.focus(); });
+
+fetch("/api/stato").then(r => r.json()).then(s => { if (!s.aperte) mostra("closed"); }).catch(() => {});
+</script>
+</body>
+</html>

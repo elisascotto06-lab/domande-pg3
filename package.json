@@ -1,0 +1,10 @@
+{
+  "name": "domande-politicamente-giovani",
+  "version": "1.0.0",
+  "description": "Raccolta domande del pubblico per gli eventi di Politicamente Giovani",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" },
+  "license": "UNLICENSED",
+  "private": true
+}
